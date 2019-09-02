@@ -56,5 +56,9 @@ public class Controller {
         }
     }
 
+    public void Finish(ActionEvent event) {
+        System.exit(0);
+    }
+
 
 }

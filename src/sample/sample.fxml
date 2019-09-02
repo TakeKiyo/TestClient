@@ -31,6 +31,7 @@
             <Label fx:id="outputsentence" layoutX="47.0" layoutY="126.0" text="送信文 " />
             <Label fx:id="connect" layoutX="348.0" layoutY="85.0" text="Label" />
             <TextField fx:id="output" layoutX="69.0" layoutY="177.0" />
+            <Button fx:id="end" layoutX="296.0" layoutY="130.0" mnemonicParsing="false" onAction="#Finish" text="切断" />
          </children>
       </Pane>
    </children>
