@@ -25,7 +25,7 @@
             <TextField fx:id="port_num" layoutX="142.0" layoutY="71.0" promptText="5000" text="5000" />
             <Label layoutX="37.0" layoutY="32.0" text="ipアドレス" />
             <Label layoutX="37.0" layoutY="76.0" text="port" />
-            <TextArea fx:id="input" layoutX="47.0" layoutY="286.0" prefHeight="92.0" prefWidth="308.0" />
+            <TextArea fx:id="input" layoutX="47.0" layoutY="286.0" prefHeight="204.0" prefWidth="308.0" />
             <Label fx:id="inputsentence" layoutX="49.0" layoutY="250.0" text="受信" />
             <Button fx:id="send" layoutX="348.0" layoutY="190.0" mnemonicParsing="false" onAction="#sendClicked" text="送信" />
             <Label fx:id="outputsentence" layoutX="47.0" layoutY="126.0" text="送信文 " />

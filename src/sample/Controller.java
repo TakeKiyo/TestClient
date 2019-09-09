@@ -20,6 +20,8 @@ public class Controller {
     public TextField output;
     public TextArea input;
     Socket socket = null;
+    public int BUFSIZE = 1024;
+
     public void Clicked(ActionEvent event) {
         String result = "接続中";
         connect.setText(result);
@@ -29,28 +31,85 @@ public class Controller {
         System.out.println(port);
         try {
             socket = new Socket(ip, port);
+            InThread inThread = new InThread(socket);
+            inThread.start();
         } catch (IOException e) {
             System.out.println(e);
+        }
+    }
+    class InThread extends Thread{
+        private Socket socket;
+        private InputStream in;
+        public int totalBytesRcvd ;
+        public int bytesRcvd;
+        public InThread(Socket socket){
+            this.socket = socket;
+            try{
+                this.in = socket.getInputStream();
+                GetThread getThread = new GetThread(in);
+                getThread.start();
+//                while (totalBytesRcvd < 2) {
+//                    if ((bytesRcvd = in.read( // 引数は読込データ、Offset、読込データ長
+//                            msg,
+//                            totalBytesRcvd,
+//                            2 - totalBytesRcvd)) == -1) {
+//                        break;
+//                    }
+//                    totalBytesRcvd += bytesRcvd;
+//                }
+            }catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    class GetThread extends Thread{
+        private InputStream in;
+        public GetThread(InputStream inputStream){
+            this.in = inputStream;
+        }
+        public void run(){
+            try{
+                int totalBytesRcvd;
+                byte[] msg = new byte[1024];
+                byte[] bytenum;
+                while(true) {
+                    bytenum = new byte[1];
+                    in.read(bytenum, 0, 1);
+                    String aa = new String(bytenum);
+                    int num = Integer.parseInt(aa);
+                    System.out.println(num);
+                    byte[] receiveBuf = new byte[num];
+                    totalBytesRcvd = 0;
+                    int recvMsgSize;
+                    while (true) {
+                        recvMsgSize = in.read(receiveBuf);
+                        totalBytesRcvd += recvMsgSize;
+                        if (totalBytesRcvd == num) {
+                            break;
+                        }
+                    }
+                    String m = new String(receiveBuf);
+                    String txt = input.getText();
+                    input.setText(txt + "\n" + m);
+                    System.out.println(m);
+                }
+            }catch (IOException e) {
+                System.out.println(e);
+            }
+
         }
     }
 
     public void sendClicked(ActionEvent event) {
         try{
-            String ip = ip_ad.getText();
-            int port = Integer.parseInt(port_num.getText());
-            Socket socket = new Socket(ip, port);
+            InputStream in = socket.getInputStream();
+            OutputStream out = socket.getOutputStream();
             String sData = output.getText();
-            OutputStream cOut = socket.getOutputStream();
-            OutputStreamWriter cOutwriter = new OutputStreamWriter(cOut);
-            cOutwriter.write(sData+ "\n");
-            cOutwriter.flush();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String gotData = reader.readLine();
-            input.setText(gotData);
-            System.out.println("受信データ:"+gotData);
-            System.out.println();
-            socket.close();
+            byte[] data = sData.getBytes();
+            byte[] msg = new byte[1024];
+            out.write(data);
+            System.out.println("sent");
         } catch (IOException e) {
             System.out.println(e);
         }
