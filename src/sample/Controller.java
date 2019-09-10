@@ -73,6 +73,7 @@ public class Controller {
                 int totalBytesRcvd;
                 byte[] msg = new byte[1024];
                 byte[] bytenum;
+                input.setText("start");
                 while(true) {
                     bytenum = new byte[1];
                     in.read(bytenum, 0, 1);
@@ -82,6 +83,7 @@ public class Controller {
                     byte[] receiveBuf = new byte[num];
                     totalBytesRcvd = 0;
                     int recvMsgSize;
+                    System.out.println("OK");
                     while (true) {
                         recvMsgSize = in.read(receiveBuf);
                         totalBytesRcvd += recvMsgSize;
