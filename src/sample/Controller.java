@@ -71,27 +71,30 @@ public class Controller {
         public void run(){
             try{
                 int totalBytesRcvd;
-                byte[] msg = new byte[1024];
                 byte[] bytenum;
                 input.setText("start");
                 while(true) {
-                    bytenum = new byte[1];
-                    in.read(bytenum, 0, 1);
-                    String aa = new String(bytenum);
-                    int num = Integer.parseInt(aa);
-                    System.out.println(num);
-                    byte[] receiveBuf = new byte[num];
-                    totalBytesRcvd = 0;
-                    int recvMsgSize;
-                    System.out.println("OK");
-                    while (true) {
-                        recvMsgSize = in.read(receiveBuf);
-                        totalBytesRcvd += recvMsgSize;
-                        if (totalBytesRcvd == num) {
-                            break;
-                        }
-                    }
-                    String m = new String(receiveBuf);
+//                    bytenum = new byte[1];
+//                    in.read(bytenum, 0, 1);
+//                    String aa = new String(bytenum);
+//                    int num = Integer.parseInt(aa);
+//                    System.out.println(num);
+//                    byte[] receiveBuf = new byte[num];
+//                    totalBytesRcvd = 0;
+//                    int recvMsgSize;
+//                    System.out.println("OK");
+//                    while (true) {
+//                        recvMsgSize = in.read(receiveBuf);
+//                        totalBytesRcvd += recvMsgSize;
+//                        if (totalBytesRcvd == num) {
+//                            break;
+//                        }
+//                    }
+                    byte[] msg = new byte[1024];
+                    in.read(msg);
+
+//                    String m = new String(receiveBuf);
+                    String m = new String(msg);
                     String txt = input.getText();
                     input.setText(txt + "\n" + m);
                     System.out.println(m);
@@ -105,11 +108,22 @@ public class Controller {
 
     public void sendClicked(ActionEvent event) {
         try{
-            InputStream in = socket.getInputStream();
             OutputStream out = socket.getOutputStream();
             String sData = output.getText();
-            byte[] data = sData.getBytes();
-            byte[] msg = new byte[1024];
+            byte[] first = new byte[1];
+            first[0] = 0x02;
+            String fi_st = new String(first);
+
+            String bcc = "11";
+            byte[] last = new byte[1];
+            first[0] = 0x03;
+            String la_st = new String(last);
+
+
+
+            String data_st = fi_st + sData +bcc+ la_st;
+            System.out.println(data_st);
+            byte[] data = data_st.getBytes();
             out.write(data);
             System.out.println("sent");
         } catch (IOException e) {
